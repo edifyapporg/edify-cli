@@ -5,6 +5,8 @@ require_relative "config"
 require_relative "client"
 require_relative "table"
 require_relative "commands/helpers"
+require_relative "commands/meetings"
+require_relative "commands/songs"
 require_relative "commands/speakers"
 
 module Edify
@@ -42,6 +44,12 @@ module Edify
 
     desc "speakers SUBCOMMAND", "Questions about speakers"
     subcommand "speakers", Commands::Speakers
+
+    desc "songs SUBCOMMAND", "Questions about songs"
+    subcommand "songs", Commands::Songs
+
+    desc "meetings SUBCOMMAND", "Questions about meetings"
+    subcommand "meetings", Commands::Meetings
 
     private
 
