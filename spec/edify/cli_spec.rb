@@ -28,6 +28,17 @@ RSpec.describe Edify::CLI do
       expect(config.url).to eq(url)
     end
 
+    it "uses the production server when the URL prompt is left blank" do
+      stub_request(:get, "#{Edify::Config::DEFAULT_URL}/api/v1/speakers/stale?limit=1")
+        .to_return(status: 200, body: '{"speakers":[]}')
+
+      out, _err, status = run_cli("login", "--token", "edify_good", stdin: "\n")
+
+      expect(status).to eq(0)
+      expect(out).to include("(#{Edify::Config::DEFAULT_URL})", "Logged in to #{Edify::Config::DEFAULT_URL}.")
+      expect(config.url).to eq(Edify::Config::DEFAULT_URL)
+    end
+
     it "saves a valid token even when its role cannot list speakers" do
       stub_request(:get, check).to_return(api_error(403, "forbidden"))
 
