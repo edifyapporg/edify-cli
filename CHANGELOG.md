@@ -7,6 +7,7 @@ All notable changes to edify-cli are recorded here. The format follows [Keep a C
 ### Added
 
 - `edify members search QUERY [--limit N]`: members whose name contains every word of the query, with gender and age group. Explains which roles can search when yours can't (#17).
+- `edify talks list [--speaker WORDS] [--purpose TEXT] [--from DATE] [--to DATE] [--limit N]`: your unit's talks, newest first, with date, speaker, purpose and topic (#20).
 
 ## [0.3.0] - 2026-11-23
 
