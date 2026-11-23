@@ -65,4 +65,40 @@ RSpec.describe Edify::Config do
       expect(described_class.new(env: env).token).to eq("edify_saved")
     end
   end
+
+  describe "sources" do
+    let(:xdg) { ENV.fetch("XDG_CONFIG_HOME") }
+
+    it "reports the default URL and no token before login" do
+      expect([config.url_source, config.token_source]).to eq([:default, nil])
+    end
+
+    it "reports the saved login" do
+      config.save(url: "https://saved.example.org", token: "edify_saved")
+      expect([config.url_source, config.token_source]).to eq(%i[saved saved])
+    end
+
+    it "reports the environment ahead of the saved login" do
+      config.save(url: "https://saved.example.org", token: "edify_saved")
+      env = { "XDG_CONFIG_HOME" => xdg, "EDIFY_URL" => "https://env.example.org", "EDIFY_TOKEN" => "edify_env" }
+
+      overridden = described_class.new(env: env)
+
+      expect([overridden.url_source, overridden.token_source]).to eq(%i[env env])
+    end
+  end
+
+  describe "#delete" do
+    it "removes a saved login and reports that it did" do
+      config.save(url: "https://saved.example.org", token: "edify_saved")
+
+      expect(config.delete).to be(true)
+      expect(config).not_to be_saved
+      expect([config.token, config.url]).to eq([nil, described_class::DEFAULT_URL])
+    end
+
+    it "reports when there was nothing to delete" do
+      expect(config.delete).to be(false)
+    end
+  end
 end

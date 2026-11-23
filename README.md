@@ -27,7 +27,18 @@ Update with `gem update edify-cli`. [CHANGELOG.md](CHANGELOG.md) says what chang
 
 To skip the prompts: `edify login --token edify_...` (add `--url http://localhost:3000` for a development server).
 
-To stop using a token, revoke it in Edify under **Settings > API Tokens**.
+To check which server and token the CLI is using, and whether the server accepts the token (the token itself is never shown):
+
+```sh
+$ edify status
+Server: https://www.edifyapp.org (from the saved login)
+Token:  from /Users/you/.config/edify/config.yml, saved 2026-11-23
+Check:  accepted
+```
+
+`edify status` exits 0 when the token is accepted and 1 otherwise.
+
+To stop using a token, run `edify logout` to remove the saved login, then revoke the token in Edify under **Settings > API Tokens**. Logging out alone doesn't revoke it.
 
 ## Commands
 
@@ -85,6 +96,7 @@ Songs and meetings are available to every role in your unit.
 
 ### Other commands
 
+- `edify status`, `edify logout` (see [Log in](#log-in))
 - `edify version`
 - `edify help [COMMAND]`
 

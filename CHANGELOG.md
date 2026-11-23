@@ -4,6 +4,11 @@ All notable changes to edify-cli are recorded here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Added
+
+- `edify status`: the server and where it comes from, where the token comes from (never the token itself), and whether the server accepts it. Exits 1 when it doesn't (#14).
+- `edify logout`: removes the saved login and reminds you to revoke the token in Edify (#14).
+
 ## [0.2.0] - 2026-11-23
 
 ### Added
