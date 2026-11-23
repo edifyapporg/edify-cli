@@ -1,3 +1,9 @@
+# Like the main Edify app, these files have no `# frozen_string_literal: true` comment, so string literals are
+# mutable. Since Ruby 3.4 they are "chilled": mutating one still works, but a future Ruby will freeze them and raise
+# FrozenError instead. Ruby warns about each such mutation only when deprecation warnings are on, so turn them on
+# before loading the gem, and any spec that runs such code shows "literal string will be frozen in the future".
+Warning[:deprecated] = true
+
 require "edify/cli"
 require "stringio"
 require "tmpdir"
