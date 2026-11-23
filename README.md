@@ -17,16 +17,16 @@ gem install ./edify-cli-*.gem
 
 ## Log in
 
-1. In Edify, open **Settings > API Tokens**, create a token, and copy it. It is shown only once.
+1. In Edify ([www.edifyapp.org](https://www.edifyapp.org)), open **Settings > API Tokens**, create a token, and copy it. It is shown only once.
 2. Run:
 
    ```sh
    edify login
    ```
 
-   Enter your Edify server's URL and paste the token. The CLI checks them against the server and saves them to `~/.config/edify/config.yml` (or `$XDG_CONFIG_HOME/edify/config.yml`), readable only by you.
+   Press Enter to use the production server, `https://www.edifyapp.org`, or type another Edify server's URL. Then paste the token. The CLI checks them against the server and saves them to `~/.config/edify/config.yml` (or `$XDG_CONFIG_HOME/edify/config.yml`), readable only by you.
 
-To skip the prompts: `edify login --url https://edify.example.org --token edify_...`
+To skip the prompts: `edify login --token edify_...` (add `--url http://localhost:3000` for a development server).
 
 To stop using a token, revoke it in Edify under **Settings > API Tokens**.
 
@@ -61,7 +61,7 @@ Needs a bishopric or clerk role in Edify.
 ## For scripts and coding agents
 
 - Every data command takes `--json`, which prints the API's response unchanged.
-- `EDIFY_URL` and `EDIFY_TOKEN` override the saved login, so a script can run without `edify login`.
+- `EDIFY_TOKEN` (and `EDIFY_URL`, if not the production server) override the saved login, so a script can run without `edify login`.
 - Errors go to stderr with exit status 1. The message is the API's own, for example `months must be a whole number from 1 to 120.`
 
 ## Security

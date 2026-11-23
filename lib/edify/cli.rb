@@ -19,14 +19,14 @@ module Edify
 
     desc "login", "Save your Edify server URL and API token"
     long_desc <<~DESC
-      Asks for your Edify server's URL and a personal access token (create one in Edify under Settings > API Tokens),
-      checks them against the server, and saves them where only you can read them. Use --url and --token to skip the
-      prompts.
+      Asks for your Edify server's URL (press Enter for #{Config::DEFAULT_URL}) and a personal access token (create one
+      in Edify under Settings > API Tokens), checks them against the server, and saves them where only you can read
+      them. Use --url and --token to skip the prompts.
     DESC
-    option :url, desc: "Your Edify server, e.g. https://edify.example.org"
+    option :url, desc: "Your Edify server (default #{Config::DEFAULT_URL})"
     option :token, desc: "A personal access token from Settings > API Tokens"
     def login
-      url = options[:url] || ask("Edify URL (e.g. https://edify.example.org):")
+      url = options[:url] || ask("Edify URL:", default: Config::DEFAULT_URL)
       token = options[:token] || ask("API token (from Settings > API Tokens):", echo: false)
       say "" unless options[:token]
 

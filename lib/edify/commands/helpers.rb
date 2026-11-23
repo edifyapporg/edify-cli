@@ -5,7 +5,7 @@ module Edify
     # Shared by every command class: reading the saved login, calling the API, and printing JSON. Errors become
     # Thor::Error, which Thor prints to stderr before exiting with status 1.
     module Helpers
-      NOT_LOGGED_IN = "Not logged in. Run `edify login`, or set EDIFY_URL and EDIFY_TOKEN.".freeze
+      NOT_LOGGED_IN = "Not logged in. Run `edify login`, or set EDIFY_TOKEN.".freeze
       RELOGIN_HINT = "Your token may have been revoked or expired. Create a new one in Edify under " \
                      "Settings > API Tokens, then run `edify login`.".freeze
 

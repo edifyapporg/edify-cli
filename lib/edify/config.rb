@@ -5,8 +5,12 @@ module Edify
   # The server URL and API token the CLI uses. They are saved by `edify login` to
   # $XDG_CONFIG_HOME/edify/config.yml (normally ~/.config/edify/config.yml) in a directory only the owner can enter
   # and a file only the owner can read, since the token can read the user's ward data. The EDIFY_URL and EDIFY_TOKEN
-  # environment variables take precedence over the file, for scripts and coding agents.
+  # environment variables take precedence over the file, for scripts and coding agents. With no URL from either, the
+  # CLI uses the production Edify server.
   class Config
+    # The www host, because the bare domain redirects to it and the client does not follow redirects.
+    DEFAULT_URL = "https://www.edifyapp.org".freeze
+
     # @param env [Hash] the environment, ENV by default
     # @return [String]
     def self.default_path(env = ENV)
@@ -21,9 +25,9 @@ module Edify
       @path = path || self.class.default_path(env)
     end
 
-    # @return [String, nil]
+    # @return [String]
     def url
-      present(env["EDIFY_URL"]) || stored["url"]
+      present(env["EDIFY_URL"]) || stored["url"] || DEFAULT_URL
     end
 
     # @return [String, nil]
@@ -31,8 +35,9 @@ module Edify
       present(env["EDIFY_TOKEN"]) || stored["token"]
     end
 
+    # A URL always has a value, so a token is all a login needs.
     def configured?
-      !url.nil? && !token.nil?
+      !token.nil?
     end
 
     # Writes the URL and token, creating the file with owner-only permissions and tightening them if it already

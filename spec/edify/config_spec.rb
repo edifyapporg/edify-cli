@@ -39,6 +39,15 @@ RSpec.describe Edify::Config do
       expect(config).not_to be_configured
     end
 
+    it "uses the production server when no URL is given" do
+      expect(config.url).to eq("https://www.edifyapp.org")
+    end
+
+    it "needs only a token to be configured" do
+      env = { "XDG_CONFIG_HOME" => ENV.fetch("XDG_CONFIG_HOME"), "EDIFY_TOKEN" => "edify_env" }
+      expect(described_class.new(env: env)).to be_configured
+    end
+
     it "lets EDIFY_URL and EDIFY_TOKEN override the saved values" do
       config.save(url: "https://saved.example.org", token: "edify_saved")
       env = { "XDG_CONFIG_HOME" => ENV.fetch("XDG_CONFIG_HOME"), "EDIFY_URL" => "https://env.example.org",

@@ -86,6 +86,18 @@ RSpec.describe Edify::Commands::Speakers do
       expect(err).to include("Not logged in. Run `edify login`")
     end
 
+    it "uses the production server with only EDIFY_TOKEN and no saved login" do
+      File.delete(Edify::Config.new.path)
+      ENV["EDIFY_TOKEN"] = "edify_env"
+      stub_request(:get, "#{Edify::Config::DEFAULT_URL}/api/v1/speakers/stale")
+        .with(headers: { "Authorization" => "Bearer edify_env" })
+        .to_return(status: 200, body: body.to_json)
+
+      _out, _err, status = run_cli("speakers", "stale")
+
+      expect(status).to eq(0)
+    end
+
     it "uses EDIFY_URL and EDIFY_TOKEN instead of the saved login" do
       ENV["EDIFY_URL"] = "https://other.example.org"
       ENV["EDIFY_TOKEN"] = "edify_env"
