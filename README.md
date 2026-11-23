@@ -6,7 +6,7 @@ It only reads from the API and formats the answer. Who can see what, and which m
 
 ## Install
 
-Requires Ruby 3.3 or newer. The gem is not on RubyGems yet, so install it from this repository:
+Requires Ruby 4.0 or newer. The gem is not on RubyGems yet, so install it from this repository:
 
 ```sh
 git clone https://github.com/edifyapporg/edify-cli.git
