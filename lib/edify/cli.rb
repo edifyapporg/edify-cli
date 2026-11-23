@@ -9,6 +9,7 @@ require_relative "commands/meetings"
 require_relative "commands/members"
 require_relative "commands/songs"
 require_relative "commands/speakers"
+require_relative "commands/talks"
 
 module Edify
   # The `edify` command. Every command reads from the Edify API with a personal access token, created in Edify under
@@ -86,6 +87,9 @@ module Edify
 
     desc "members SUBCOMMAND", "Find members"
     subcommand "members", Commands::Members
+
+    desc "talks SUBCOMMAND", "Questions about talks"
+    subcommand "talks", Commands::Talks
 
     URL_SOURCES = { env: "from EDIFY_URL", saved: "from the saved login", default: "the default" }.freeze
 

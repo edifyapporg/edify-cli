@@ -5,6 +5,9 @@ module Edify
     # Shared by every command class: reading the saved login, calling the API, and printing JSON. Errors become
     # Thor::Error, which Thor prints to stderr before exiting with status 1.
     module Helpers
+      # Dates are checked against this before any request, so a date argument can never put anything else into a
+      # request path or query.
+      ISO_DATE_PATTERN = /\A\d{4}-\d{2}-\d{2}\z/
       NOT_LOGGED_IN = "Not logged in. Run `edify login`, or set EDIFY_TOKEN.".freeze
       RELOGIN_HINT = "Your token may have been revoked or expired. Create a new one in Edify under " \
                      "Settings > API Tokens, then run `edify login`.".freeze
@@ -37,6 +40,13 @@ module Edify
         return "#{error.message}\n#{RELOGIN_HINT}" if error.code == "invalid_token"
 
         messages.fetch(error.code, error.message)
+      end
+
+      # @param name [Symbol] :date for a DATE argument, or the option's name, e.g. :from
+      def check_date!(name, value)
+        return if value.to_s.match?(ISO_DATE_PATTERN)
+
+        raise Thor::Error, "#{name == :date ? 'DATE' : "--#{name}"} must be a date written as YYYY-MM-DD."
       end
 
       def print_json(body)

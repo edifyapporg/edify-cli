@@ -3,8 +3,6 @@ module Edify
     class Meetings < Thor
       include Helpers
 
-      # Checked before any request, so a date argument can never put anything else into a request path.
-      ISO_DATE_PATTERN = /\A\d{4}-\d{2}-\d{2}\z/
       CONTRIBUTOR_LABELS = {
         "presider" => "Presiding",
         "conductor" => "Conducting",
@@ -60,12 +58,6 @@ module Edify
       end
 
       private
-
-      def check_date!(name, value)
-        return if value.to_s.match?(ISO_DATE_PATTERN)
-
-        raise Thor::Error, "#{name == :date ? 'DATE' : "--#{name}"} must be a date written as YYYY-MM-DD."
-      end
 
       def contributor_lines(contributors)
         CONTRIBUTOR_LABELS.filter_map { |key, label| "#{label}: #{contributors[key]}" if contributors[key] }

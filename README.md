@@ -106,6 +106,25 @@ Smith, Jane  female  adult
 
 Shows name, gender and age group only. `--limit N` (1 to 100, default 25) and `--json` work as elsewhere. Needs a bishopric or clerk role, the same roles that see the Members page in Edify.
 
+### `edify talks list`
+
+Your unit's sacrament meeting talks, newest first, with the meeting date, speaker, purpose and topic. Long topics are shortened in the table, and `--json` has them in full.
+
+```sh
+$ edify talks list --speaker "jane smith"
+$ edify talks list --purpose missionary --from 2026-01-01
+```
+
+| Option | Meaning |
+|---|---|
+| `--speaker WORDS` | Every word must appear in the speaker's name ("Last, First") |
+| `--purpose TEXT` | Part of the purpose, e.g. `missionary` or `youth` |
+| `--from DATE`, `--to DATE` | Meeting dates to include, `YYYY-MM-DD` |
+| `--limit N` | Most talks to list, 1 to 200 (default 50) |
+| `--json` | Print the API's JSON instead of a table |
+
+Needs a bishopric or clerk role, the same roles that see the Talks page in Edify.
+
 ### Other commands
 
 - `edify status`, `edify logout` (see [Log in](#log-in))
