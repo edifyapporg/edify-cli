@@ -7,7 +7,7 @@ module CliHelpers
   # Runs the edify command in-process.
   # @return [Array(String, String, Integer)] stdout, stderr and the exit status
   def run_cli(*args, stdin: "")
-    # Where Readline is available (Ruby 3.3 and 3.4 ship it), Thor prompts through it, which reads the terminal
+    # Where Readline is available (for example, installed as a gem), Thor prompts through it, which reads the terminal
     # rather than $stdin. The basic editor reads $stdin, so prompts can be answered from the test.
     allow(Thor::LineEditor).to receive(:best_available).and_return(Thor::LineEditor::Basic)
     out = StringIO.new
