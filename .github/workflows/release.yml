@@ -1,0 +1,27 @@
+name: Release
+
+# Publishes the version in lib/edify/version.rb to RubyGems.org with trusted publishing (OIDC), so no API key is
+# stored anywhere. Started by hand only, on main, after the release PR has merged. `rake release` creates and pushes
+# the vX.Y.Z tag if it is missing, then pushes the gem. See "Releasing" in the README.
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Publish to RubyGems
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Must match the trusted publisher on rubygems.org.
+    environment: rubygems
+    permissions:
+      contents: write # push the release tag
+      id-token: write # trusted publishing
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+        with:
+          bundler-cache: true
+      - run: bundle exec rake
+      - uses: rubygems/release-gem@5c53f5308233b7c0f47411f0471b3faae6fa57b2 # v1.4.2

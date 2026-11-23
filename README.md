@@ -6,13 +6,13 @@ It only reads from the API and formats the answer. Who can see what, and which m
 
 ## Install
 
-Requires Ruby 4.0 or newer. The gem is not on RubyGems yet. Download `edify-cli-<version>.gem` from the [latest release](https://github.com/edifyapporg/edify-cli/releases/latest), then:
+Requires Ruby 4.0 or newer.
 
 ```sh
-gem install ./edify-cli-0.2.0.gem
+gem install edify-cli
 ```
 
-Each release lists the gem's SHA-256 checksum, and [CHANGELOG.md](CHANGELOG.md) says what changed. To build from source instead, check out a release tag and run `gem build edify-cli.gemspec`.
+Update with `gem update edify-cli`. [CHANGELOG.md](CHANGELOG.md) says what changed in each version. Each [GitHub release](https://github.com/edifyapporg/edify-cli/releases) also has the gem attached, with its SHA-256 checksum.
 
 ## Log in
 
@@ -113,25 +113,27 @@ Record each user-visible change under **Unreleased** in [CHANGELOG.md](CHANGELOG
 
 ## Releasing
 
-Versions follow [Semantic Versioning](https://semver.org/): a new command or option is a minor release (0.2.0 to 0.3.0), and a fix is a patch release (0.2.0 to 0.2.1).
+Versions follow [Semantic Versioning](https://semver.org/): a new command or option is a minor release (0.2.0 to 0.3.0), and a fix is a patch release (0.2.0 to 0.2.1). Publishing uses RubyGems [trusted publishing](https://guides.rubygems.org/trusted-publishing/), so no API key is stored anywhere.
 
 1. **Release PR.** On a branch, bump `Edify::VERSION` in `lib/edify/version.rb`. In `CHANGELOG.md`, rename **Unreleased** to the new version with the release date, add an empty **Unreleased** above it, and update the comparison links at the bottom. Open a PR and merge it.
-2. **Tag the merge.** On an up-to-date `main`, confirm `edify version` prints the new version, then:
+2. **Run the Release workflow** on `main`, from **Actions > Release > Run workflow** or with:
 
    ```sh
-   git tag -a v0.3.0 -m "edify-cli 0.3.0" && git push origin v0.3.0
+   gh workflow run release.yml --ref main
    ```
-3. **Build from the tag** and note the checksum:
+
+   It runs the specs, then `rake release`: it creates and pushes the `v0.3.0` tag and pushes the gem to RubyGems.org, with an attestation. If the `rubygems` environment requires a reviewer, approve the run when asked.
+3. **Publish the GitHub release** with the version's changelog section and the checksum as notes, attaching the gem fetched from RubyGems, so both places carry the same file:
 
    ```sh
-   gem build edify-cli.gemspec && shasum -a 256 edify-cli-0.3.0.gem
-   ```
-4. **Publish the GitHub release** with the version's changelog section and the checksum as notes, and the gem attached:
-
-   ```sh
+   gem fetch edify-cli -v 0.3.0 && shasum -a 256 edify-cli-0.3.0.gem
    gh release create v0.3.0 --verify-tag --title "edify-cli 0.3.0" --notes-file NOTES.md edify-cli-0.3.0.gem
    ```
-5. **Check it.** Download the attached gem with `gh release download v0.3.0`, compare its checksum, and install it into a throwaway `GEM_HOME` to confirm `edify version`.
+4. **Check it.** Install the new version into a throwaway gem home and confirm `edify version`:
+
+   ```sh
+   (export GEM_HOME="$(mktemp -d)" GEM_PATH=""; gem install edify-cli -v 0.3.0 && "$GEM_HOME/bin/edify" version)
+   ```
 
 A published version is never changed or reused. A mistake is fixed in a new patch release.
 
