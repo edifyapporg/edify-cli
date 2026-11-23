@@ -6,6 +6,7 @@ require_relative "client"
 require_relative "table"
 require_relative "commands/helpers"
 require_relative "commands/meetings"
+require_relative "commands/members"
 require_relative "commands/songs"
 require_relative "commands/speakers"
 
@@ -82,6 +83,9 @@ module Edify
 
     desc "meetings SUBCOMMAND", "Questions about meetings"
     subcommand "meetings", Commands::Meetings
+
+    desc "members SUBCOMMAND", "Find members"
+    subcommand "members", Commands::Members
 
     URL_SOURCES = { env: "from EDIFY_URL", saved: "from the saved login", default: "the default" }.freeze
 
