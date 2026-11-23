@@ -12,9 +12,10 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 4.0"
 
   spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/CHANGELOG.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
-  spec.files = Dir["lib/**/*.rb", "exe/*", "LICENSE.md", "README.md"]
+  spec.files = Dir["lib/**/*.rb", "exe/*", "CHANGELOG.md", "LICENSE.md", "README.md"]
   spec.bindir = "exe"
   spec.executables = ["edify"]
   spec.require_paths = ["lib"]
