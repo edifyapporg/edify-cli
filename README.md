@@ -6,14 +6,13 @@ It only reads from the API and formats the answer. Who can see what, and which m
 
 ## Install
 
-Requires Ruby 4.0 or newer. The gem is not on RubyGems yet, so install it from this repository:
+Requires Ruby 4.0 or newer. The gem is not on RubyGems yet. Download `edify-cli-<version>.gem` from the [latest release](https://github.com/edifyapporg/edify-cli/releases/latest), then:
 
 ```sh
-git clone https://github.com/edifyapporg/edify-cli.git
-cd edify-cli
-gem build edify-cli.gemspec
-gem install ./edify-cli-*.gem
+gem install ./edify-cli-0.2.0.gem
 ```
+
+Each release lists the gem's SHA-256 checksum, and [CHANGELOG.md](CHANGELOG.md) says what changed. To build from source instead, check out a release tag and run `gem build edify-cli.gemspec`.
 
 ## Log in
 
@@ -109,6 +108,32 @@ bundle exec rake    # specs and RuboCop
 ```
 
 Edify issue: [edifyapporg/edify#320](https://github.com/edifyapporg/edify/issues/320). Part of [#315](https://github.com/edifyapporg/edify/issues/315).
+
+Record each user-visible change under **Unreleased** in [CHANGELOG.md](CHANGELOG.md) in the PR that makes it.
+
+## Releasing
+
+Versions follow [Semantic Versioning](https://semver.org/): a new command or option is a minor release (0.2.0 to 0.3.0), and a fix is a patch release (0.2.0 to 0.2.1).
+
+1. **Release PR.** On a branch, bump `Edify::VERSION` in `lib/edify/version.rb`. In `CHANGELOG.md`, rename **Unreleased** to the new version with the release date, add an empty **Unreleased** above it, and update the comparison links at the bottom. Open a PR and merge it.
+2. **Tag the merge.** On an up-to-date `main`, confirm `edify version` prints the new version, then:
+
+   ```sh
+   git tag -a v0.3.0 -m "edify-cli 0.3.0" && git push origin v0.3.0
+   ```
+3. **Build from the tag** and note the checksum:
+
+   ```sh
+   gem build edify-cli.gemspec && shasum -a 256 edify-cli-0.3.0.gem
+   ```
+4. **Publish the GitHub release** with the version's changelog section and the checksum as notes, and the gem attached:
+
+   ```sh
+   gh release create v0.3.0 --verify-tag --title "edify-cli 0.3.0" --notes-file NOTES.md edify-cli-0.3.0.gem
+   ```
+5. **Check it.** Download the attached gem with `gh release download v0.3.0`, compare its checksum, and install it into a throwaway `GEM_HOME` to confirm `edify version`.
+
+A published version is never changed or reused. A mistake is fixed in a new patch release.
 
 ## License
 
