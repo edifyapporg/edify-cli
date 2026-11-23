@@ -53,6 +53,37 @@ Poe, Ada     female  youth  2024-06-02
 
 Needs a bishopric or clerk role in Edify.
 
+### `edify songs recent`
+
+The hymns your unit has sung in sacrament meeting over the last few weeks, ending today: most sung first, then most recently sung, with the types each was sung as. Prelude and postlude are not counted.
+
+```sh
+$ edify songs recent --weeks 8 --song-type sacrament_hymn
+Sung since 2026-09-28, the last 8 weeks (sacrament_hymn only):
+TITLE                      TIMES  LAST_SUNG   TYPES
+As Bread Is Broken #1007   1      2026-11-22  sacrament_hymn
+```
+
+| Option | Meaning |
+|---|---|
+| `--weeks N` | How many weeks back to count, 1 to 104 (default 12) |
+| `--limit N` | Most hymns to list, 1 to 200 (default 50) |
+| `--song-type T` | Only `opening_hymn`, `sacrament_hymn`, `congregational_hymn`, `musical_number` or `closing_hymn` |
+| `--json` | Print the API's JSON instead of a table |
+
+### `edify meetings list` and `edify meetings show DATE`
+
+`list` shows your unit's meetings and their speakers. `--from` defaults to today and `--to` to 84 days later, and the range may cover at most 366 days. `show` prints one meeting: who presides, conducts, leads the music and prays, its talks in order and its songs in program order.
+
+```sh
+$ edify meetings list --from 2026-11-01 --to 2026-11-30
+$ edify meetings show 2026-11-08
+```
+
+Dates are written `YYYY-MM-DD`. Both commands take `--json`.
+
+Songs and meetings are available to every role in your unit.
+
 ### Other commands
 
 - `edify version`

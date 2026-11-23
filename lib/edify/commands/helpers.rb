@@ -23,11 +23,21 @@ module Edify
         raise Thor::Error, e.message
       end
 
+      # @param not_found [String, nil] a message to show instead of the API's generic one when it answers not_found
+      # @param params [Hash] query parameters; nil values are left out
       # @return [Hash] the API's response body
-      def api_get(path, params = {})
+      def api_get(path, not_found: nil, **params)
         client.get(path, params)
       rescue Client::Error => e
-        raise Thor::Error, e.code == "invalid_token" ? "#{e.message}\n#{RELOGIN_HINT}" : e.message
+        raise Thor::Error, error_message(e, not_found)
+      end
+
+      def error_message(error, not_found)
+        case error.code
+        when "invalid_token" then "#{error.message}\n#{RELOGIN_HINT}"
+        when "not_found" then not_found || error.message
+        else error.message
+        end
       end
 
       def print_json(body)
