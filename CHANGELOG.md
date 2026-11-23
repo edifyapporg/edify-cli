@@ -4,6 +4,8 @@ All notable changes to edify-cli are recorded here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-23
+
 ### Added
 
 - `edify status`: the server and where it comes from, where the token comes from (never the token itself), and whether the server accepts it. Exits 1 when it doesn't (#14).
@@ -31,6 +33,7 @@ All notable changes to edify-cli are recorded here. The format follows [Keep a C
 - `--json` on data commands, `EDIFY_TOKEN` and `EDIFY_URL` overrides, and API errors on stderr with exit status 1 (#2, #3).
 - The login is saved with owner-only permissions, and the token is sent only over HTTPS, except to localhost (#2).
 
-[Unreleased]: https://github.com/edifyapporg/edify-cli/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/edifyapporg/edify-cli/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/edifyapporg/edify-cli/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/edifyapporg/edify-cli/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/edifyapporg/edify-cli/releases/tag/v0.1.0
