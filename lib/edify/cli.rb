@@ -1,6 +1,8 @@
 require "thor"
 
 require_relative "version"
+require_relative "config"
+require_relative "client"
 
 module Edify
   # The `edify` command. Every command reads from the Edify API with a personal access token, created in Edify under
