@@ -40,6 +40,39 @@ module Edify
       !token.nil?
     end
 
+    # @return [Symbol] :env (EDIFY_URL), :saved (the saved login) or :default
+    def url_source
+      return :env if present(env["EDIFY_URL"])
+
+      stored["url"] ? :saved : :default
+    end
+
+    # @return [Symbol, nil] :env (EDIFY_TOKEN), :saved (the saved login), or nil when there is no token
+    def token_source
+      return :env if present(env["EDIFY_TOKEN"])
+
+      :saved if stored["token"]
+    end
+
+    def saved?
+      File.exist?(path)
+    end
+
+    # @return [Time, nil] when the login was last saved
+    def saved_at
+      File.mtime(path) if saved?
+    end
+
+    # Removes the saved login. EDIFY_URL and EDIFY_TOKEN are untouched.
+    # @return [Boolean] whether there was a saved login to remove
+    def delete
+      return false unless saved?
+
+      File.delete(path)
+      @stored = nil
+      true
+    end
+
     # Writes the URL and token, creating the file with owner-only permissions and tightening them if it already
     # existed with looser ones.
     def save(url:, token:)

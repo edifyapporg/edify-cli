@@ -38,3 +38,7 @@ RSpec/MultipleExpectations:
 # Matches the main Edify app, which dropped these comments (edifyapporg/edify e9e3ea9).
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+# Matches the main Edify app. Methods like Config#delete return whether they did something without being questions.
+Naming/PredicateMethod:
+  Enabled: false

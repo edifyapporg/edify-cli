@@ -37,6 +37,38 @@ module Edify
       say "Logged in to #{url.to_s.strip.chomp('/')}. Saved to #{config.path}."
     end
 
+    desc "logout", "Remove the saved login"
+    long_desc <<~DESC
+      Deletes the login saved by `edify login`. The token itself keeps working until you revoke it in Edify under
+      Settings > API Tokens. An EDIFY_TOKEN set in your environment is not affected.
+    DESC
+    def logout
+      if config.delete
+        say "Logged out. Removed #{config.path}."
+        say "The token still works until you revoke it in Edify under Settings > API Tokens."
+      else
+        say "No saved login to remove (#{config.path})."
+      end
+      say "EDIFY_TOKEN is still set in this environment, so commands keep using it." if config.token_source == :env
+    end
+
+    desc "status", "Show which server and token the CLI uses, and whether the server accepts the token"
+    long_desc <<~DESC
+      Shows the Edify server the CLI talks to and where that comes from, where its token comes from (never the token
+      itself), and whether the server accepts the token. Exits 0 when it does and 1 otherwise.
+    DESC
+    def status
+      say "Server: #{config.url} (#{URL_SOURCES.fetch(config.url_source)})"
+      return not_logged_in_status unless config.configured?
+
+      say "Token:  #{token_description}"
+      result = verify_token(config.url, config.token)
+      say(result == :accepted ? "Check:  accepted" : "Check:  accepted, though your role cannot list speakers")
+    rescue Client::Error => e
+      say "Check:  not accepted. #{e.message}"
+      exit 1
+    end
+
     desc "version", "Show the edify-cli version"
     def version
       say VERSION
@@ -51,16 +83,40 @@ module Edify
     desc "meetings SUBCOMMAND", "Questions about meetings"
     subcommand "meetings", Commands::Meetings
 
+    URL_SOURCES = { env: "from EDIFY_URL", saved: "from the saved login", default: "the default" }.freeze
+
     private
 
-    # The API has no "who am I" endpoint yet, so a one-row request stands in. An invalid token is refused. A valid
-    # token whose role cannot see speakers is still saved, since it may be meant for other commands.
     def check_login(url, token)
       raise Thor::Error, "Both a URL and a token are needed." if url.empty? || token.empty?
 
-      Client.new(url: url, token: token).get("speakers/stale", limit: 1)
+      verify_token(url, token)
     rescue Client::Error => e
-      raise Thor::Error, e.message unless e.code == "forbidden"
+      raise Thor::Error, e.message
+    end
+
+    # The API has no "who am I" endpoint yet, so a one-row request stands in. A valid token whose role cannot see
+    # speakers still counts, since it may be meant for other commands.
+    # @return [Symbol] :accepted, or :accepted_without_speakers
+    # @raise [Client::Error] when the server refuses the token or cannot be reached
+    def verify_token(url, token)
+      Client.new(url: url, token: token).get("speakers/stale", limit: 1)
+      :accepted
+    rescue Client::Error => e
+      raise unless e.code == "forbidden"
+
+      :accepted_without_speakers
+    end
+
+    def token_description
+      return "from EDIFY_TOKEN" if config.token_source == :env
+
+      "from #{config.path}, saved #{config.saved_at.strftime('%Y-%m-%d')}"
+    end
+
+    def not_logged_in_status
+      say "Token:  none. Run `edify login`, or set EDIFY_TOKEN."
+      exit 1
     end
   end
 end
