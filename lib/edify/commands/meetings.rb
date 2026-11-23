@@ -50,7 +50,7 @@ module Edify
       def show(date)
         check_date!(:date, date)
 
-        body = api_get("meetings/#{date}", not_found: "No meeting on #{date}.")
+        body = api_get("meetings/#{date}", messages: { "not_found" => "No meeting on #{date}." })
         return print_json(body) if options[:json]
 
         say "#{body['date']}  #{humanize(body['meeting_type'])}"

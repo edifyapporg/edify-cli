@@ -94,6 +94,18 @@ Dates are written `YYYY-MM-DD`. Both commands take `--json`.
 
 Songs and meetings are available to every role in your unit.
 
+### `edify members search QUERY`
+
+Finds members of your unit whose name contains every word of QUERY, in any order. Names are recorded as "Last, First", so this finds "Smith, Jane":
+
+```sh
+$ edify members search jane smith
+NAME         GENDER  GROUP
+Smith, Jane  female  adult
+```
+
+Shows name, gender and age group only. `--limit N` (1 to 100, default 25) and `--json` work as elsewhere. Needs a bishopric or clerk role, the same roles that see the Members page in Edify.
+
 ### Other commands
 
 - `edify status`, `edify logout` (see [Log in](#log-in))
