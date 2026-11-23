@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
                      "using a personal access token. Readable tables by default, JSON with --json."
   spec.homepage = "https://github.com/edifyapporg/edify-cli"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.3"
+  spec.required_ruby_version = ">= 4.0"
 
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["rubygems_mfa_required"] = "true"
